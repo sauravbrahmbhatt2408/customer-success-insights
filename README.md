@@ -12,7 +12,7 @@ Redux Toolkit with RTK Query, Tailwind, shadcn/ui, recharts.
 You need Git and Docker.
 
 ```bash
-git clone https://github.com/<your-username>/customer-success-insights.git
+git clone https://github.com/sauravbrahmbhatt2408/customer-success-insights.git
 cd customer-success-insights
 cp .env.example .env
 docker compose up --build
@@ -27,14 +27,14 @@ The api container runs migrations and loads demo data on start. Postgres is publ
 Without a `GEMINI_API_KEY` the app uses a fixed fake insight, so everything works offline. Get a
 free key from [Google AI Studio](https://aistudio.google.com/apikey) to use real summaries.
 
-### Demo accounts
+### Accounts
 
-| Role    | Email               | Password   |
-| ------- | ------------------- | ---------- |
-| Admin   | admin@example.com   | Admin12345 |
-| Manager | manager@example.com | Demo12345  |
-| CSM     | priya@example.com   | Demo12345  |
-| CSM     | daniel@example.com  | Demo12345  |
+| Role    | Name              | Email                | Password   |
+| ------- | ----------------- | -------------------- | ---------- |
+| Admin   | Neha Kapoor       | admin@csinsights.io  | Welcome123 |
+| Manager | Maria Lopez       | maria@csinsights.io  | Welcome123 |
+| CSM     | Saurav Brahmbhatt | saurav@csinsights.io | Welcome123 |
+| CSM     | Daniel Kim        | daniel@csinsights.io | Welcome123 |
 
 The admin comes from `ADMIN_EMAIL` / `ADMIN_PASSWORD`.
 

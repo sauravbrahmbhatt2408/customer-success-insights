@@ -21,12 +21,12 @@ from app.models import (
 )
 from app.security import hash_password
 
-DEMO_PASSWORD = "Demo12345"
+DEFAULT_PASSWORD = "Welcome123"
 
-DEMO_USERS = [
-    ("manager@example.com", "Maria Lopez", Role.MANAGER),
-    ("priya@example.com", "Priya Shah", Role.CSM),
-    ("daniel@example.com", "Daniel Kim", Role.CSM),
+TEAM = [
+    ("maria@csinsights.io", "Maria Lopez", Role.MANAGER),
+    ("saurav@csinsights.io", "Saurav Brahmbhatt", Role.CSM),
+    ("daniel@csinsights.io", "Daniel Kim", Role.CSM),
 ]
 
 # name, company, email, industry, plan, status, mrr, owner email
@@ -39,7 +39,7 @@ CUSTOMERS = [
         Plan.ENTERPRISE,
         CustomerStatus.ACTIVE,
         "8400",
-        "priya@example.com",
+        "saurav@csinsights.io",
     ),
     (
         "Tom Fischer",
@@ -49,7 +49,7 @@ CUSTOMERS = [
         Plan.GROWTH,
         CustomerStatus.AT_RISK,
         "2100",
-        "priya@example.com",
+        "saurav@csinsights.io",
     ),
     (
         "Aisha Okafor",
@@ -59,7 +59,7 @@ CUSTOMERS = [
         Plan.STARTER,
         CustomerStatus.ONBOARDING,
         "450",
-        "priya@example.com",
+        "saurav@csinsights.io",
     ),
     (
         "Marco Rossi",
@@ -69,7 +69,7 @@ CUSTOMERS = [
         Plan.ENTERPRISE,
         CustomerStatus.ACTIVE,
         "12500",
-        "priya@example.com",
+        "saurav@csinsights.io",
     ),
     (
         "Sophie Martin",
@@ -79,7 +79,7 @@ CUSTOMERS = [
         Plan.GROWTH,
         CustomerStatus.CHURNED,
         "0",
-        "priya@example.com",
+        "saurav@csinsights.io",
     ),
     (
         "James Carter",
@@ -89,7 +89,7 @@ CUSTOMERS = [
         Plan.GROWTH,
         CustomerStatus.ACTIVE,
         "3200",
-        "daniel@example.com",
+        "daniel@csinsights.io",
     ),
     (
         "Mei Chen",
@@ -99,7 +99,7 @@ CUSTOMERS = [
         Plan.STARTER,
         CustomerStatus.ACTIVE,
         "600",
-        "daniel@example.com",
+        "daniel@csinsights.io",
     ),
     (
         "Ravi Patel",
@@ -109,7 +109,7 @@ CUSTOMERS = [
         Plan.ENTERPRISE,
         CustomerStatus.AT_RISK,
         "9800",
-        "daniel@example.com",
+        "daniel@csinsights.io",
     ),
     (
         "Emma Wilson",
@@ -119,7 +119,7 @@ CUSTOMERS = [
         Plan.GROWTH,
         CustomerStatus.ONBOARDING,
         "1800",
-        "daniel@example.com",
+        "daniel@csinsights.io",
     ),
     (
         "Lucas Moreau",
@@ -129,7 +129,7 @@ CUSTOMERS = [
         Plan.STARTER,
         CustomerStatus.ACTIVE,
         "350",
-        "manager@example.com",
+        "maria@csinsights.io",
     ),
 ]
 
@@ -345,11 +345,11 @@ async def seed() -> None:
     async with SessionLocal() as db:
         users = {
             settings.admin_email.lower(): await get_or_create_user(
-                db, settings.admin_email.lower(), "Admin", Role.ADMIN, settings.admin_password
+                db, settings.admin_email.lower(), "Neha Kapoor", Role.ADMIN, settings.admin_password
             )
         }
-        for email, full_name, role in DEMO_USERS:
-            users[email] = await get_or_create_user(db, email, full_name, role, DEMO_PASSWORD)
+        for email, full_name, role in TEAM:
+            users[email] = await get_or_create_user(db, email, full_name, role, DEFAULT_PASSWORD)
 
         if await db.scalar(select(func.count()).select_from(Customer)):
             await db.commit()

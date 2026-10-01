@@ -3,17 +3,17 @@ from tests.conftest import auth_headers, create_customer, create_user
 
 
 async def test_csm_only_sees_own_customers_and_gets_404_for_others(client):
-    await create_user("priya@example.com")
+    await create_user("saurav@example.com")
     await create_user("daniel@example.com")
-    priya = await auth_headers(client, "priya@example.com")
+    saurav = await auth_headers(client, "saurav@example.com")
     daniel = await auth_headers(client, "daniel@example.com")
-    mine = await create_customer(client, priya, company="Mine")
+    mine = await create_customer(client, saurav, company="Mine")
     theirs = await create_customer(client, daniel, company="Theirs")
 
-    listed = await client.get("/api/v1/customers", headers=priya)
-    other = await client.get(f"/api/v1/customers/{theirs['id']}", headers=priya)
+    listed = await client.get("/api/v1/customers", headers=saurav)
+    other = await client.get(f"/api/v1/customers/{theirs['id']}", headers=saurav)
     edit_other = await client.patch(
-        f"/api/v1/customers/{theirs['id']}", json={"status": "churned"}, headers=priya
+        f"/api/v1/customers/{theirs['id']}", json={"status": "churned"}, headers=saurav
     )
 
     assert [c["id"] for c in listed.json()["items"]] == [mine["id"]]

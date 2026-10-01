@@ -18,8 +18,8 @@ class Settings(BaseSettings):
     gemini_api_key: str = ""
     gemini_model: str = "gemini-3.5-flash-lite"
 
-    admin_email: str = "admin@example.com"
-    admin_password: str = "Admin12345"
+    admin_email: str = "admin@csinsights.io"
+    admin_password: str = "Welcome123"
 
     @field_validator("database_url")
     @classmethod

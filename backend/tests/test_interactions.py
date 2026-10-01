@@ -4,9 +4,9 @@ NOTES = "Discussed renewal timeline and the new reporting module in detail."
 
 
 async def test_csm_cannot_log_or_see_interactions_for_other_customers(client):
-    await create_user("priya@example.com")
+    await create_user("saurav@example.com")
     await create_user("daniel@example.com")
-    priya = await auth_headers(client, "priya@example.com")
+    saurav = await auth_headers(client, "saurav@example.com")
     daniel = await auth_headers(client, "daniel@example.com")
     theirs = await create_customer(client, daniel)
     payload = {
@@ -17,10 +17,10 @@ async def test_csm_cannot_log_or_see_interactions_for_other_customers(client):
         "occurred_at": "2026-09-01T10:00:00Z",
     }
 
-    blocked = await client.post("/api/v1/interactions", json=payload, headers=priya)
+    blocked = await client.post("/api/v1/interactions", json=payload, headers=saurav)
     created = await client.post("/api/v1/interactions", json=payload, headers=daniel)
-    hidden = await client.get(f"/api/v1/interactions/{created.json()['id']}", headers=priya)
-    listed = await client.get("/api/v1/interactions", headers=priya)
+    hidden = await client.get(f"/api/v1/interactions/{created.json()['id']}", headers=saurav)
+    listed = await client.get("/api/v1/interactions", headers=saurav)
 
     assert blocked.status_code == 404
     assert created.status_code == 201
