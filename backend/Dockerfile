@@ -11,5 +11,5 @@ RUN useradd --create-home app
 USER app
 
 EXPOSE 8000
-# Render and similar hosts pass the port in $PORT.
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers"]
+# Render and similar hosts pass the port in $PORT. SEED_ON_START=true loads the demo data.
+CMD ["sh", "-c", "alembic upgrade head && if [ ${SEED_ON_START:-false} = true ]; then python seed.py; fi && uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers"]

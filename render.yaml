@@ -6,8 +6,6 @@ services:
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     healthCheckPath: /health
-    # Demo deployment: also load the admin and demo data (skipped if it already exists).
-    dockerCommand: sh -c "alembic upgrade head && python seed.py && uvicorn app.main:app --host 0.0.0.0 --port $PORT --proxy-headers"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -21,6 +19,8 @@ services:
       - key: JWT_SECRET
         generateValue: true
       - key: COOKIE_SECURE
+        value: "true"
+      - key: SEED_ON_START
         value: "true"
       - key: GEMINI_MODEL
         value: gemini-3.5-flash-lite
