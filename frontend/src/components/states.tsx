@@ -36,8 +36,10 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
 export function PageHeader({ title, actions }: { title: string; actions?: React.ReactNode }) {
   return (
     <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-      <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
-      {actions && <div className="flex gap-2">{actions}</div>}
+      <h1 className="min-w-0 text-xl font-semibold tracking-tight break-words sm:text-2xl">
+        {title}
+      </h1>
+      {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
     </div>
   );
 }
@@ -57,7 +59,7 @@ export function Pagination({
   if (total <= pageSize) return null;
 
   return (
-    <div className="mt-4 flex items-center justify-between text-sm text-muted-foreground">
+    <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm text-muted-foreground">
       <span>
         Page {page} of {pages} ({total} total)
       </span>

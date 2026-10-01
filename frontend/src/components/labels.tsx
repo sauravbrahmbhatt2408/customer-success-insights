@@ -20,16 +20,16 @@ export const SENTIMENT_LABELS: Record<Sentiment, string> = {
 };
 
 const STATUS_STYLES: Record<CustomerStatus, string> = {
-  onboarding: "bg-sky-100 text-sky-800",
-  active: "bg-emerald-100 text-emerald-800",
-  at_risk: "bg-amber-100 text-amber-800",
-  churned: "bg-zinc-200 text-zinc-700",
+  onboarding: "bg-sky-100 text-sky-800 dark:bg-sky-500/15 dark:text-sky-300",
+  active: "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300",
+  at_risk: "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+  churned: "bg-zinc-200 text-zinc-700 dark:bg-zinc-500/20 dark:text-zinc-300",
 };
 
 const SENTIMENT_STYLES: Record<Sentiment, string> = {
-  positive: "bg-emerald-100 text-emerald-800",
-  neutral: "bg-zinc-200 text-zinc-700",
-  negative: "bg-red-100 text-red-800",
+  positive: "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300",
+  neutral: "bg-zinc-200 text-zinc-700 dark:bg-zinc-500/20 dark:text-zinc-300",
+  negative: "bg-red-100 text-red-800 dark:bg-red-500/15 dark:text-red-300",
 };
 
 const AI_STATUS_LABELS: Record<AIStatus, string> = {

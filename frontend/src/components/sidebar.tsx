@@ -1,9 +1,10 @@
 "use client";
 
-import { LayoutDashboard, LogOut, MessageSquare, UserCircle, Users, Building2 } from "lucide-react";
+import { Building2, LayoutDashboard, LogOut, MessageSquare, UserCircle, Users } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { api, useLogoutMutation } from "@/store/api";
@@ -38,16 +39,34 @@ export function Sidebar() {
   }
 
   return (
-    <aside className="flex shrink-0 flex-col border-b bg-background md:min-h-screen md:w-60 md:border-r md:border-b-0">
-      <div className="px-5 py-4 text-sm font-semibold tracking-tight">Customer Success Insights</div>
-      <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-col md:pb-0">
+    <aside className="sticky top-0 z-10 flex shrink-0 flex-col border-b bg-background md:h-screen md:w-60 md:border-r md:border-b-0">
+      <div className="flex items-center justify-between gap-2 px-4 py-3 md:px-5 md:py-4">
+        <span className="text-sm leading-tight font-semibold tracking-tight">
+          Customer Success Insights
+        </span>
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            aria-label="Log out"
+            onClick={handleLogout}
+            disabled={isLoading}
+          >
+            <LogOut />
+          </Button>
+        </div>
+      </div>
+
+      <nav className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-col md:overflow-visible md:pb-0">
         {LINKS.filter((link) => !link.adminOnly || user?.role === "admin").map(
           ({ href, label, icon: Icon }) => (
             <Link
               key={href}
               href={href}
               className={cn(
-                "flex items-center gap-2 rounded-lg px-3 py-2 text-sm whitespace-nowrap text-muted-foreground hover:bg-muted hover:text-foreground",
+                "flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm whitespace-nowrap text-muted-foreground hover:bg-muted hover:text-foreground",
                 pathname.startsWith(href) && "bg-muted font-medium text-foreground",
               )}
             >
@@ -57,6 +76,7 @@ export function Sidebar() {
           ),
         )}
       </nav>
+
       <div className="mt-auto hidden border-t p-4 md:block">
         <p className="truncate text-sm font-medium">{user?.full_name}</p>
         <p className="truncate text-xs text-muted-foreground">
@@ -69,12 +89,6 @@ export function Sidebar() {
           onClick={handleLogout}
           disabled={isLoading}
         >
-          <LogOut />
-          Log out
-        </Button>
-      </div>
-      <div className="px-3 pb-3 md:hidden">
-        <Button variant="outline" size="sm" onClick={handleLogout} disabled={isLoading}>
           <LogOut />
           Log out
         </Button>

@@ -72,18 +72,22 @@ export default function InteractionsPage() {
             </option>
           ))}
         </Select>
-        <Input
-          type="date"
-          aria-label="From date"
-          value={filters.date_from ?? ""}
-          onChange={(e) => setFilter({ date_from: e.target.value || undefined })}
-        />
-        <Input
-          type="date"
-          aria-label="To date"
-          value={filters.date_to ?? ""}
-          onChange={(e) => setFilter({ date_to: e.target.value || undefined })}
-        />
+        <label className="flex items-center gap-2 text-sm text-muted-foreground">
+          From
+          <Input
+            type="date"
+            value={filters.date_from ?? ""}
+            onChange={(e) => setFilter({ date_from: e.target.value || undefined })}
+          />
+        </label>
+        <label className="flex items-center gap-2 text-sm text-muted-foreground">
+          To
+          <Input
+            type="date"
+            value={filters.date_to ?? ""}
+            onChange={(e) => setFilter({ date_to: e.target.value || undefined })}
+          />
+        </label>
       </div>
 
       {isLoading ? (

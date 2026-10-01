@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 
-import { CountBars, InteractionsLine, SENTIMENT_COLORS } from "@/components/dashboard-charts";
+import { CountBars, InteractionsLine } from "@/components/dashboard-charts";
 import {
   AIStatusBadge,
   SENTIMENT_LABELS,
@@ -28,7 +28,7 @@ export default function DashboardPage() {
     return (
       <div className="space-y-4">
         <Skeleton className="h-8 w-48" />
-        <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
           {Array.from({ length: 6 }, (_, i) => (
             <Skeleton key={i} className="h-24" />
           ))}
@@ -65,12 +65,12 @@ export default function DashboardPage() {
     <div className="space-y-6">
       <PageHeader title={role === "csm" ? "My dashboard" : "Dashboard"} />
 
-      <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 xl:grid-cols-6">
         {cards.map((card) => (
           <Card key={card.label} size="sm">
             <CardContent>
               <p className="text-sm text-muted-foreground">{card.label}</p>
-              <p className="mt-1 text-2xl font-semibold tabular-nums">{card.value}</p>
+              <p className="mt-1 truncate text-xl font-semibold tabular-nums sm:text-2xl">{card.value}</p>
             </CardContent>
           </Card>
         ))}
@@ -92,7 +92,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             {hasSentiment ? (
-              <CountBars data={sentiment} colors={SENTIMENT_COLORS} />
+              <CountBars data={sentiment} sentiment />
             ) : (
               <p className="text-sm text-muted-foreground">No insights yet.</p>
             )}

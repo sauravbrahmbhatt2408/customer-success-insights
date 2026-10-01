@@ -56,10 +56,10 @@ export default function UsersPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
+                  <TableHead className="hidden md:table-cell">Email</TableHead>
                   <TableHead>Role</TableHead>
                   <TableHead>Status</TableHead>
-                  <TableHead>Joined</TableHead>
+                  <TableHead className="hidden lg:table-cell">Joined</TableHead>
                   <TableHead />
                 </TableRow>
               </TableHeader>
@@ -68,8 +68,11 @@ export default function UsersPage() {
                   const isMe = user.id === me.id;
                   return (
                     <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.full_name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
+                      <TableCell>
+                        <div className="font-medium">{user.full_name}</div>
+                        <div className="text-xs text-muted-foreground md:hidden">{user.email}</div>
+                      </TableCell>
+                      <TableCell className="hidden md:table-cell">{user.email}</TableCell>
                       <TableCell>
                         <Select
                           aria-label={`Role for ${user.full_name}`}
@@ -88,7 +91,7 @@ export default function UsersPage() {
                           {user.is_active ? "Active" : "Inactive"}
                         </Badge>
                       </TableCell>
-                      <TableCell>{formatDate(user.created_at)}</TableCell>
+                      <TableCell className="hidden lg:table-cell">{formatDate(user.created_at)}</TableCell>
                       <TableCell className="text-right">
                         {!isMe && (
                           <Button

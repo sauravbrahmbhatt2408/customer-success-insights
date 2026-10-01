@@ -115,11 +115,11 @@ export default function CustomersPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Company</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Plan</TableHead>
+                  <TableHead className="hidden lg:table-cell">Contact</TableHead>
+                  <TableHead className="hidden sm:table-cell">Plan</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead className="text-right">MRR</TableHead>
-                  <TableHead>Owner</TableHead>
+                  <TableHead className="hidden xl:table-cell">Owner</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -130,16 +130,16 @@ export default function CustomersPage() {
                         {customer.company}
                       </Link>
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="hidden lg:table-cell">
                       <div>{customer.name}</div>
                       <div className="text-xs text-muted-foreground">{customer.email}</div>
                     </TableCell>
-                    <TableCell>{PLAN_LABELS[customer.plan]}</TableCell>
+                    <TableCell className="hidden sm:table-cell">{PLAN_LABELS[customer.plan]}</TableCell>
                     <TableCell>
                       <StatusBadge status={customer.status} />
                     </TableCell>
                     <TableCell className="text-right">{formatMoney(customer.mrr)}</TableCell>
-                    <TableCell>{customer.owner.full_name}</TableCell>
+                    <TableCell className="hidden xl:table-cell">{customer.owner.full_name}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

@@ -13,8 +13,9 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geist.variable} h-full antialiased`}>
-      <body className="min-h-full bg-muted/30 font-sans">
+    // next-themes sets the theme class on <html> before hydration.
+    <html lang="en" className={`${geist.variable} h-full antialiased`} suppressHydrationWarning>
+      <body className="min-h-full bg-muted/30 font-sans text-foreground">
         <Providers>{children}</Providers>
       </body>
     </html>

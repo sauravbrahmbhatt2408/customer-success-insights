@@ -24,11 +24,11 @@ export function InteractionTable({
         <TableHeader>
           <TableRow>
             <TableHead>Title</TableHead>
-            {showCustomer && <TableHead>Customer</TableHead>}
-            <TableHead>Type</TableHead>
+            {showCustomer && <TableHead className="hidden lg:table-cell">Customer</TableHead>}
+            <TableHead className="hidden lg:table-cell">Type</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Insight</TableHead>
-            <TableHead>Sentiment</TableHead>
+            <TableHead className="hidden xl:table-cell">Sentiment</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -38,14 +38,21 @@ export function InteractionTable({
                 <Link href={`/interactions/${interaction.id}`} className="hover:underline">
                   {interaction.title}
                 </Link>
+                {showCustomer && (
+                  <div className="text-xs font-normal text-muted-foreground lg:hidden">
+                    {interaction.customer.company}
+                  </div>
+                )}
               </TableCell>
-              {showCustomer && <TableCell>{interaction.customer.company}</TableCell>}
-              <TableCell>{TYPE_LABELS[interaction.type]}</TableCell>
+              {showCustomer && (
+                <TableCell className="hidden lg:table-cell">{interaction.customer.company}</TableCell>
+              )}
+              <TableCell className="hidden lg:table-cell">{TYPE_LABELS[interaction.type]}</TableCell>
               <TableCell>{formatDate(interaction.occurred_at)}</TableCell>
               <TableCell>
                 <AIStatusBadge status={interaction.ai_status} />
               </TableCell>
-              <TableCell>
+              <TableCell className="hidden xl:table-cell">
                 <SentimentBadge sentiment={interaction.insight?.sentiment ?? null} />
               </TableCell>
             </TableRow>
