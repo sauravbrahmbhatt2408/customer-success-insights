@@ -7,6 +7,19 @@ health of the book of business.
 Backend: FastAPI, async SQLAlchemy, PostgreSQL, Redis, Gemini. Frontend: Next.js (App Router),
 Redux Toolkit with RTK Query, Tailwind, shadcn/ui, recharts.
 
+## Features
+
+- Email and password auth with three roles: admin, manager and CSM.
+- Customers: list with search and filters (status, plan, owner), create, edit, delete.
+- Interactions: log meetings, calls, emails and support tickets, with filters by customer, type,
+  sentiment and date range.
+- AI insight for every interaction: summary, sentiment, action items and risks, generated in the
+  background. Failed runs can be regenerated.
+- Dashboard: headline numbers, interactions per day, sentiment and status breakdowns, recent risks,
+  customers with no contact in 30+ days and recent activity. Cached in Redis per scope.
+- User management for admins (role and active status).
+- Light and dark theme, and layouts that work from phones to wide screens.
+
 ## Running it
 
 You need Git and Docker.
@@ -81,6 +94,58 @@ npm run lint && npm run build
 | `BACKEND_URL` (frontend, build time) | Where Next.js proxies `/api/*` |
 | `TEST_DATABASE_URL` / `TEST_REDIS_URL` | Optional overrides for the tests |
 
+## Project structure
+
+```
+backend/
+  app/
+    main.py          app setup, routers, error handler
+    config.py        settings from environment
+    database.py      async engine, session, declarative base
+    security.py      password hashing and JWTs
+    deps.py          db session, current user, role checks, pagination
+    cache.py         Redis client and dashboard cache helpers
+    models/          users, customers, interactions, insights
+    schemas/         request and response models
+    routers/         auth, users, customers, interactions, dashboard
+    services/        ai.py (Gemini), dashboard.py (aggregate queries)
+  alembic/           migrations
+  seed.py            admin and demo data
+  tests/             pytest suite against real Postgres and Redis
+frontend/
+  src/
+    app/             (auth) login/register, (dashboard) pages behind the session guard
+    components/      forms, tables, charts, sidebar, shadcn/ui primitives
+    store/           Redux store, auth slice, RTK Query API
+    lib/             axios client with refresh handling, zod schemas
+    types/           shared TypeScript types
+docker-compose.yml   postgres, redis, api, web
+render.yaml          Render blueprint for the backend
+```
+
+## API
+
+All routes are under `/api/v1` except `GET /health`. Interactive docs are at `/docs`.
+
+| Method and path | Who | Notes |
+| --- | --- | --- |
+| `POST /auth/register` | anyone | Always creates a CSM |
+| `POST /auth/login` | anyone | Access token in the body, refresh token in an httpOnly cookie |
+| `POST /auth/refresh`, `POST /auth/logout` | anyone | Read or clear the refresh cookie |
+| `GET /auth/me`, `PATCH /auth/me` | signed in | Profile and password change |
+| `GET /users`, `PATCH /users/{id}` | admin | Role and active status |
+| `GET /users/options` | admin, manager | Owner picker |
+| `GET /customers`, `POST /customers` | signed in | Filters: `status`, `plan`, `owner_id`, `search` |
+| `GET/PATCH /customers/{id}` | signed in | CSMs only reach their own customers |
+| `DELETE /customers/{id}` | admin, manager | Also deletes interactions and insights |
+| `GET /interactions`, `POST /interactions` | signed in | Filters: `customer_id`, `type`, `sentiment`, `date_from`, `date_to` |
+| `GET/PATCH /interactions/{id}` | signed in | Changing notes queues a new insight |
+| `POST /interactions/{id}/regenerate` | signed in | Retry the insight |
+| `GET /dashboard` | signed in | Scoped to the CSM's own customers |
+
+Lists take `page` and `page_size` (max 100) and return `{ items, total, page, page_size }`.
+Errors use `{ "detail": "message" }`.
+
 ## How it fits together
 
 The browser only talks to the Next.js app. Next.js `rewrites` proxy `/api/*` to FastAPI, so the API
@@ -131,22 +196,26 @@ affected keys after the commit. If Redis is down, the API logs it and reads from
 
 ## Deployment (Vercel + Render)
 
-**Backend on Render**
+**Backend on Render.** `render.yaml` describes the API (Docker), a PostgreSQL database and a Key
+Value (Redis) instance.
 
-1. Create a PostgreSQL database and a Key Value (Redis) instance.
-2. Create a Web Service from `backend/` using its Dockerfile. It runs migrations on start and
-   listens on `$PORT`.
-3. Set `DATABASE_URL` (Render's `postgres://` URL works as is), `REDIS_URL`,
-   `JWT_SECRET`, `COOKIE_SECURE=true`, `GEMINI_API_KEY`, `GEMINI_MODEL`, `ADMIN_EMAIL` and
-   `ADMIN_PASSWORD`.
-4. Run `python seed.py` once from the Render shell to create the admin and demo data.
-5. Use `/health` as the health check path.
+1. In Render, choose New > Blueprint and select this repository.
+2. Enter `GEMINI_API_KEY` and `ADMIN_PASSWORD` when asked. `JWT_SECRET` is generated.
+3. The API runs migrations on start and uses `/health` as its health check.
+4. Load the admin and demo data once from your machine, using the database's External Database
+   URL from the Render dashboard:
+
+   ```bash
+   cd backend
+   DATABASE_URL="<external database url>" ADMIN_PASSWORD="<same as on Render>" .venv/bin/python seed.py
+   ```
 
 **Frontend on Vercel**
 
-1. Import the repo with `frontend/` as the root directory.
-2. Set `BACKEND_URL` to the Render service URL, for example `https://csi-api.onrender.com`. Rewrites
-   are read at build time, so redeploy after changing it.
+1. Import the repository and set the root directory to `frontend`.
+2. Set `BACKEND_URL` to the Render API URL, for example `https://csi-api.onrender.com`. Rewrites are
+   read at build time, so redeploy after changing it.
 
-Because all API calls go through the Vercel domain, the refresh cookie is first-party and no CORS
-setup is needed.
+All API calls go through the Vercel domain, so the refresh cookie is first-party and no CORS setup
+is needed. On the free plan the API sleeps after 15 minutes without traffic and takes about a
+minute to wake up.
