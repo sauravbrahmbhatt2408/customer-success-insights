@@ -201,14 +201,8 @@ Value (Redis) instance.
 
 1. In Render, choose New > Blueprint and select this repository.
 2. Enter `GEMINI_API_KEY` and `ADMIN_PASSWORD` when asked. `JWT_SECRET` is generated.
-3. The API runs migrations on start and uses `/health` as its health check.
-4. Load the admin and demo data once from your machine, using the database's External Database
-   URL from the Render dashboard:
-
-   ```bash
-   cd backend
-   DATABASE_URL="<external database url>" ADMIN_PASSWORD="<same as on Render>" .venv/bin/python seed.py
-   ```
+3. On start the API runs migrations and loads the admin and demo data (skipped if it already
+   exists). The health check is `/health`.
 
 **Frontend on Vercel**
 
