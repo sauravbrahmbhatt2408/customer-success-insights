@@ -7,6 +7,15 @@ health of the book of business.
 Backend: FastAPI, async SQLAlchemy, PostgreSQL, Redis, Gemini. Frontend: Next.js (App Router),
 Redux Toolkit with RTK Query, Tailwind, shadcn/ui, recharts.
 
+## Live demo
+
+- App: https://customer-success-insights.vercel.app
+- API: https://csi-api-t63l.onrender.com (docs at [/docs](https://csi-api-t63l.onrender.com/docs))
+- Sign in with `saurav@csinsights.io` / `Welcome123`, or any account listed under
+  [Accounts](#accounts).
+
+The API is on a free plan and sleeps when idle, so the first request can take up to a minute.
+
 ## Features
 
 - Email and password auth with three roles: admin, manager and CSM.
